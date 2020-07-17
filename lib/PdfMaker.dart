@@ -15,6 +15,12 @@ PdfMaker(context, value, valueImage) async {
   PdfImage image = await pdfImageFromImageProvider(pdf: pdf.document, image: widgets.AssetImage('logo.png'));
 
   final imgFiles = valueImage['image1'];
+  final img1 = PdfImage.file(
+    pdf.document,
+    bytes: File(imgFiles.path).readAsBytesSync(),
+  );
+
+  /*
   for (var i = 0; i < imgFiles.length; i++) {
     // add image
     var img1 = PdfImage.file(
@@ -22,6 +28,7 @@ PdfMaker(context, value, valueImage) async {
       bytes: File(imgFiles[i].path).readAsBytesSync(),
     );
   }
+   */
 
   pdf.addPage(
     MultiPage(
@@ -140,6 +147,7 @@ PdfMaker(context, value, valueImage) async {
             columnWidths: {0: FractionColumnWidth(0.05), 1: FractionColumnWidth(0.5), 2: FractionColumnWidth(0.05), 3: FractionColumnWidth(0.4)},
           ),
           SizedBox(height: 20),
+          Image(img1, height: 60, width: 60, fit: BoxFit.fitWidth),
         ];
       }
     ),
