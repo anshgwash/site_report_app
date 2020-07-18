@@ -21,7 +21,7 @@ class PdfViewerPage extends StatelessWidget {
         title: Text('PDF output'),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.share), onPressed: () async {
-            await Printing.sharePdf(bytes: pdf.save(), filename: shareName);
+            await Printing.sharePdf(bytes: pdf.save(), filename: 'shareName.pdf');
           },)
         ],
       ),

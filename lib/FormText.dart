@@ -433,7 +433,6 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
           if (formKey.currentState.saveAndValidate() && formKey2.currentState.saveAndValidate()) {
             var value = formKey.currentState.value;
             var valueImage = formKey2.currentState.value;
-
             // 1. check if all entries are valid
             PdfMaker(context, value, valueImage);
             // 2. if yes, call PdfMaker and pass in context, value, formKey2
