@@ -11,11 +11,11 @@ class FormSelectorTab extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.amber,
+          backgroundColor: Colors.teal,
           bottom: TabBar(
             tabs: <Widget>[
-              Tab(icon: Icon(Icons.receipt), text: 'Form'),
-              Tab(icon: Icon(Icons.camera_alt), text: 'Images'),
+              Tab(text: 'Form'),
+              Tab(text: 'Images'),
             ],
           ),
           title: Text('Site Report App'),

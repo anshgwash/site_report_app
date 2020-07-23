@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:flutter/material.dart' as material;
+
 // dependencies
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -11,28 +13,35 @@ import 'package:sitereportapp/PdfViewerPage.dart';
 
 PdfMaker(context, value, valueImage) async {
   final Document pdf = Document();
+  List<PdfImage> imagesList = new List(10);
+  List<PdfImage> elevImages = new List(4);
+  PdfImage logoImage = await pdfImageFromImageProvider(pdf: pdf.document, image: widgets.AssetImage('logo.png'));
 
-  PdfImage image = await pdfImageFromImageProvider(pdf: pdf.document, image: widgets.AssetImage('logo.png'));
-
-
-  final imgFiles = valueImage['image1'].toString();
-  var parsedImgFile = imgFiles.substring(8, imgFiles.length - 2);
-  print(parsedImgFile);
-
-  final img1 = PdfImage.file(
-    pdf.document,
-    bytes: File(parsedImgFile).readAsBytesSync(),
-  );
-
-/*
-  for (var i = 0; i < imgFiles.length; i++) {
-    // add image
-    var img1 = PdfImage.file(
-      pdf.document,
-      bytes: File(imgFiles[i].path).readAsBytesSync(),
-    );
+  for (var i = 1; i < 5; i++) {
+    if (!valueImage['elev$i'].isEmpty) {
+      print('elevation $i image is not empty');
+      String imgFiles = valueImage['elev$i'].toString();
+      var parsedImgFile = imgFiles.substring(8, imgFiles.length - 2);
+      var pickedImage = PdfImage.file(
+        pdf.document,
+        bytes: File(parsedImgFile).readAsBytesSync(),
+      );
+      elevImages[i - 1] = pickedImage;
+    }
   }
- */
+
+  for (var i = 1; i < 11; i++) {
+    if (!valueImage['img$i'].isEmpty) {
+      print('$i image is not empty');
+      String imgFiles = valueImage['img$i'].toString();
+      var parsedImgFile = imgFiles.substring(8, imgFiles.length - 2);
+      var pickedImage = PdfImage.file(
+        pdf.document,
+        bytes: File(parsedImgFile).readAsBytesSync(),
+      );
+      imagesList[i - 1] = pickedImage;
+    }
+  }
 
   pdf.addPage(
     MultiPage(
@@ -48,7 +57,7 @@ PdfMaker(context, value, valueImage) async {
                 children: [
                   Text('${value['projectName']} - (Site Report #${value['siteReportNo']})',
                       style: TextStyle(fontSize: 25)),
-                  Image(image, fit: BoxFit.contain, height: 74.3, width: 60)
+                  Image(logoImage, fit: BoxFit.contain, height: 74.3, width: 60)
                 ]),
           ),
           Row(children: [
@@ -134,26 +143,88 @@ PdfMaker(context, value, valueImage) async {
             <String>['V', 'Slab Projection - any other', '${yesNo(text: 'slabProjOther', value: value)}'],
             <String>[''],
             <String>['6', 'Staircase', '-', '-'],
-            <String>['A', 'Width of Staircase', '${yesNo(text: 'lvlOfSlab', value: value)}'],
-            <String>['B', 'Dimension of Risers, Treads', '${yesNo(text: 'cutoutLift', value: value)}'],
-            <String>['C', 'Mid Landing Level of Staircase', '${yesNo(text: 'cutOutPlumb', value: value)}'],
-            <String>['D', 'Hand Railing Details', '${yesNo(text: 'cutOutElectrical', value: value)}'],
+            <String>['A', 'Width of Staircase', '${yesNo(text: 'widthStaircase', value: value)}'],
+            <String>['B', 'Dimension of Risers, Treads', '${yesNo(text: 'dimRisers', value: value)}'],
+            <String>['C', 'Mid Landing Level of Staircase', '${yesNo(text: 'midLandingLvl', value: value)}'],
+            <String>['D', 'Hand Railing Details', '${yesNo(text: 'handRailingDet', value: value)}'],
             <String>[''],
             <String>['7', 'Block Work', '-', '-'],
-            <String>['A', 'Line & Level of Brickwork', '${yesNo(text: 'lvlOfSlab', value: value)}'],
+            <String>['A', 'Line & Level of Brickwork', '${yesNo(text: 'lineOfBrickWork', value: value)}'],
             <String>[''],
             <String>['8', 'Block Work', '-', '-'],
-            <String>['A', 'South side', '${yesNo(text: 'lvlOfSlab', value: value)}'],
-            <String>['B', 'North side', '${yesNo(text: 'cutoutLift', value: value)}'],
-            <String>['C', 'East side', '${yesNo(text: 'cutOutPlumb', value: value)}'],
-            <String>['D', 'West side', '${yesNo(text: 'cutOutElectrical', value: value)}'],
+            <String>['A', 'South side', '${yesNo(text: 'southSide', value: value)}'],
+            <String>['B', 'North side', '${yesNo(text: 'northSide', value: value)}'],
+            <String>['C', 'East side', '${yesNo(text: 'eastSide', value: value)}'],
+            <String>['D', 'West side', '${yesNo(text: 'westSide', value: value)}'],
           ],
             columnWidths: {0: FractionColumnWidth(0.05), 1: FractionColumnWidth(0.5), 2: FractionColumnWidth(0.05), 3: FractionColumnWidth(0.4)},
           ),
           SizedBox(height: 20),
-          Image(img1, height: 500, width: 500, fit: BoxFit.fitWidth),
+          elevPlace(0, elevImages, valueImage, 'Front'),
+          elevPlace(1, elevImages, valueImage, 'Rear'),
+          elevPlace(2, elevImages, valueImage, 'Side 1'),
+          elevPlace(3, elevImages, valueImage, 'Side 2'),
         ];
       }
+    ),
+  );
+
+  pdf.addPage(
+    MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        build: (context) {
+          return <Widget> [
+            /*
+            Table(
+              //border: TableBorder(left: true, right: true, top: true, bottom: true, horizontalInside: true, verticalInside: true),
+                children: [
+                  TableRow(
+                    children: [
+                      imagePlace(0, imagesList, valueImage),
+                      imagePlace(1, imagesList, valueImage),
+                    ]
+                  ),
+                  TableRow(
+                      children: [
+                        imagePlace(2, imagesList, valueImage),
+                        imagePlace(3, imagesList, valueImage),
+                      ]
+                  ),
+                  TableRow(
+                      children: [
+                        imagePlace(4, imagesList, valueImage),
+                        imagePlace(5, imagesList, valueImage),
+                      ]
+                  ),
+                  TableRow(
+                      children: [
+                        imagePlace(6, imagesList, valueImage),
+                        imagePlace(7, imagesList, valueImage),
+                      ]
+                  ),
+                  TableRow(
+                      children: [
+                        imagePlace(8, imagesList, valueImage),
+                        imagePlace(9, imagesList, valueImage),
+                      ]
+                  ),
+                ]
+                ),
+
+             */
+            imagePlace(0, imagesList, valueImage),
+            imagePlace(1, imagesList, valueImage),
+            imagePlace(2, imagesList, valueImage),
+            imagePlace(3, imagesList, valueImage),
+            imagePlace(4, imagesList, valueImage),
+            imagePlace(5, imagesList, valueImage),
+            imagePlace(6, imagesList, valueImage),
+            imagePlace(7, imagesList, valueImage),
+            imagePlace(8, imagesList, valueImage),
+            imagePlace(9, imagesList, valueImage),
+          ];
+        }
     ),
   );
 
@@ -161,17 +232,24 @@ PdfMaker(context, value, valueImage) async {
 
   final String dir = (await getApplicationDocumentsDirectory()).path;
   print(dir);
-  final String path = '$dir/report.pdf';
+  final String path = '$dir/$shareName.pdf';
   final File file = File(path);
   await file.writeAsBytes(pdf.save());
+  /*
+  await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save());
+
+   */
+
+
   material.Navigator.of(context).push(
       material.MaterialPageRoute(
         builder: (_) => PdfViewerPage(path: path, pdf: pdf, shareName: shareName),
       )
   );
 
-}
 
+}
 
 // ignore: missing_return
 String yesNo({text, value}) {
@@ -180,5 +258,66 @@ String yesNo({text, value}) {
   }
   if (value[text] == 'not a.p.d.') {
     return 'No';
+  }
+}
+
+Widget imagePlace(i, imagesList, valueImage) {
+  if (imagesList[i] != null) {
+    if(valueImage['img${i+1}-Remark'] != '') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 10),
+          Image(imagesList[i], fit: BoxFit.contain, height: 250),
+          SizedBox(height: 2),
+          Text('Image ${i+1}: ${valueImage['img${i+1}-Remark']}'),
+          SizedBox(height: 2),
+        ],
+      );
+    } else {
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 10),
+            Image(imagesList[i], fit: BoxFit.contain, height: 250),
+            SizedBox(height: 2),
+            Text('Image${i+1}'),
+          ]
+      );
+
+    }
+  } else {
+    return SizedBox(height: 0.01);
+  }
+}
+
+Widget elevPlace(i, elevImages, valueImage, text) {
+  if (elevImages[i] != null) {
+    if(valueImage['elev${i+1}-Remark'] != '') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          //Expanded(child: Image(elevImages[i], height: 650, fit: BoxFit.contain), flex: 2),
+          Image(elevImages[i], height: 600, fit: BoxFit.contain),
+          SizedBox(height: 2),
+          Text('$text: ${valueImage['elev${i+1}-Remark']}', style: TextStyle(fontSize: 16)),
+          SizedBox(height: 10),
+      ],
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //Expanded(child: Image(elevImages[i], height: 650, fit: BoxFit.contain), flex: 2),
+            Image(elevImages[i], height: 600, fit: BoxFit.contain),
+            SizedBox(height: 2),
+            Text('$text', style: TextStyle(fontSize: 16)),
+            SizedBox(height: 10),
+          ]
+      );
+
+    }
+  } else {
+    return SizedBox(height: 0.01);
   }
 }

@@ -34,6 +34,7 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
           FormBuilder(
             key: formKey,
             child: Column(
+
               children: <Widget>[
                 Header(text: 'Section 1: Site Report info'),
                 FormBuilderTextField(
@@ -177,11 +178,11 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
                   ),
                   options: [
                     FormBuilderFieldOption(
-                        value: 'engOne', child: Text('Ansh G')),
+                        value: 'Ansh Gwash', child: Text('Ansh G')),
                     FormBuilderFieldOption(
-                        value: 'engTwo', child: Text('Sundeep G.')),
+                        value: 'Sundeep Gwash', child: Text('Sundeep G.')),
                     FormBuilderFieldOption(
-                        value: 'engThree', child: Text('Vishal S.')),
+                        value: 'Vishal Shah', child: Text('Vishal S.')),
                   ],
                 ),
                 SizedBox(height: 50),
@@ -189,14 +190,14 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
                 SizedBox(height: 50),
                 Header(text: 'Section 3 - Checklist'),
                 SizedBox(height: 15),
-                SmallerHeader(text: 'A - Drawing on site audit'),
+                SmallerHeader(text: '1 - Drawing on site audit'),
                 YesNo(
                   attribute: 'dwgUpToDate',
                   label: 'Correct and latest drawing being referred',
                   remark: false,
                 ),
                 SizedBox(height: 15),
-                SmallerHeader(text: 'B - Site Development'),
+                SmallerHeader(text: '2 - Site Development'),
                 YesNo(
                   attribute: 'northAsPerDwg',
                   label: 'North of site as per demarcation',
@@ -213,7 +214,7 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
                   remark: true,
                 ),
                 SizedBox(height: 15),
-                SmallerHeader(text: 'C - Setting out & center line checking'),
+                SmallerHeader(text: '3 - Setting out & center line checking'),
                 YesNo(
                   attribute: 'openOffsetDim',
                   label: 'Open offset dimension',
@@ -225,14 +226,14 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
                   remark: true,
                 ),
                 SizedBox(height: 15),
-                SmallerHeader(text: 'D - Shuttering Check'),
+                SmallerHeader(text: '4 - Shuttering Check'),
                 YesNo(
                   attribute: 'shutteringCheck',
                   label: 'Overall checking - supporting level, no gaps etc',
                   remark: true,
                 ),
                 SizedBox(height: 15),
-                SmallerHeader(text: 'E - Slab checking'),
+                SmallerHeader(text: '5 - Slab checking'),
                 FormBuilderTextField(
                   attribute: 'lvlOfSlab',
                   decoration: const InputDecoration(
@@ -362,6 +363,56 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
                   remark: false,
                 ),
                 SizedBox(height: 20),
+                SmallerHeader(text: '6 - Staircase'),
+                YesNo(
+                  attribute: 'widthStaircase',
+                  label: 'Width of Staircase',
+                  remark: false,
+                ),
+                YesNo(
+                  attribute: 'dimRisers',
+                  label: 'Dimensions of risers/treads',
+                  remark: false,
+                ),
+                YesNo(
+                  attribute: 'midLandingLvl',
+                  label: 'Mid Landing Level of Staircase',
+                  remark: false,
+                ),
+                YesNo(
+                  attribute: 'handRailingDet',
+                  label: 'Hand Railing Details',
+                  remark: false,
+                ),
+                SizedBox(height: 20),
+                SmallerHeader(text: '7 - Block work'),
+                YesNo(
+                  attribute: 'lineOfBrickWork',
+                  label: 'Line and Level of Brick Work',
+                  remark: false,
+                ),
+                SizedBox(height: 20),
+                SmallerHeader(text: '8 - Architectural Elevation Features'),
+                YesNo(
+                  attribute: 'southSide',
+                  label: 'South side',
+                  remark: false,
+                ),
+                YesNo(
+                  attribute: 'northSide',
+                  label: 'North side',
+                  remark: false,
+                ),
+                YesNo(
+                  attribute: 'eastSide',
+                  label: 'East side',
+                  remark: false,
+                ),
+                YesNo(
+                  attribute: 'westSide',
+                  label: 'West side',
+                  remark: false,
+                ),
                 /*
                 Row(
                   children: <Widget>[
@@ -428,7 +479,7 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.check),
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.teal,
         onPressed: () async {
           if (formKey.currentState.saveAndValidate() && formKey2.currentState.saveAndValidate()) {
             var value = formKey.currentState.value;
