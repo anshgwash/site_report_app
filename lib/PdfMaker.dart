@@ -50,7 +50,7 @@ PdfMaker(context, value, valueImage) async {
       build: (context) {
         return <Widget>[
           Header(
-            textStyle: TextStyle(fontSize: 23),
+            textStyle: TextStyle(fontSize: 19),
             level: 0,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,13 +94,19 @@ PdfMaker(context, value, valueImage) async {
               )),
             ),
           ]),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
+          Table.fromTextArray(context: context, data: <List<String>>[
+            <String>['Representing', 'Name and designation'],
+            <String>['Architect','${value['archRep']}'],
+            <String>['Client','${value['clientRep']}'],
+            <String>['Contractor','${value['contractorRep']}'],
+          ]),
+
           Header(
             level: 2,
             child:
             Text('Following points were observed during site visit'),
           ),
-          SizedBox(height: 20),
           Table.fromTextArray(context: context, data: <List<String>>[
             <String>['Sr No', 'Description of Items', 'Y/N', 'Remarks'],
             <String>['1', 'Drawings on site- Audit', '-', '-'],
@@ -159,82 +165,50 @@ PdfMaker(context, value, valueImage) async {
           ],
             columnWidths: {0: FractionColumnWidth(0.05), 1: FractionColumnWidth(0.5), 2: FractionColumnWidth(0.05), 3: FractionColumnWidth(0.4)},
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 5),
           elevPlace(0, elevImages, valueImage, 'Front'),
           elevPlace(1, elevImages, valueImage, 'Rear'),
           elevPlace(2, elevImages, valueImage, 'Side 1'),
           elevPlace(3, elevImages, valueImage, 'Side 2'),
+
+          imagePlace(0, imagesList, valueImage),
+          imagePlace(1, imagesList, valueImage),
+          imagePlace(2, imagesList, valueImage),
+          imagePlace(3, imagesList, valueImage),
+          imagePlace(4, imagesList, valueImage),
+          imagePlace(5, imagesList, valueImage),
+          imagePlace(6, imagesList, valueImage),
+          imagePlace(7, imagesList, valueImage),
+          imagePlace(8, imagesList, valueImage),
+          imagePlace(9, imagesList, valueImage),
         ];
       }
     ),
   );
 
+  /*
   pdf.addPage(
     MultiPage(
         pageFormat: PdfPageFormat.a4,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         build: (context) {
           return <Widget> [
-            /*
-            Table(
-              //border: TableBorder(left: true, right: true, top: true, bottom: true, horizontalInside: true, verticalInside: true),
-                children: [
-                  TableRow(
-                    children: [
-                      imagePlace(0, imagesList, valueImage),
-                      imagePlace(1, imagesList, valueImage),
-                    ]
-                  ),
-                  TableRow(
-                      children: [
-                        imagePlace(2, imagesList, valueImage),
-                        imagePlace(3, imagesList, valueImage),
-                      ]
-                  ),
-                  TableRow(
-                      children: [
-                        imagePlace(4, imagesList, valueImage),
-                        imagePlace(5, imagesList, valueImage),
-                      ]
-                  ),
-                  TableRow(
-                      children: [
-                        imagePlace(6, imagesList, valueImage),
-                        imagePlace(7, imagesList, valueImage),
-                      ]
-                  ),
-                  TableRow(
-                      children: [
-                        imagePlace(8, imagesList, valueImage),
-                        imagePlace(9, imagesList, valueImage),
-                      ]
-                  ),
-                ]
-                ),
 
-             */
-            imagePlace(0, imagesList, valueImage),
-            imagePlace(1, imagesList, valueImage),
-            imagePlace(2, imagesList, valueImage),
-            imagePlace(3, imagesList, valueImage),
-            imagePlace(4, imagesList, valueImage),
-            imagePlace(5, imagesList, valueImage),
-            imagePlace(6, imagesList, valueImage),
-            imagePlace(7, imagesList, valueImage),
-            imagePlace(8, imagesList, valueImage),
-            imagePlace(9, imagesList, valueImage),
           ];
         }
     ),
   );
+   */
 
   String shareName = '${value['projectName']}_report${value['siteReportNo'].toString()}';
 
-  final String dir = (await getApplicationDocumentsDirectory()).path;
+
+  final String dir = (await getExternalStorageDirectory()).path;
   print(dir);
   final String path = '$dir/$shareName.pdf';
   final File file = File(path);
   await file.writeAsBytes(pdf.save());
+
   /*
   await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save());

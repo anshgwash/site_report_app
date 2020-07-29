@@ -12,6 +12,7 @@ import 'package:sitereportapp/FormImages.dart';
 import 'package:sitereportapp/PdfMaker.dart';
 
 import 'PdfViewerPage.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 final GlobalKey<FormBuilderState> formKey = GlobalKey<FormBuilderState>();
 
@@ -187,6 +188,53 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
                 ),
                 SizedBox(height: 50),
                 Header(text: 'Section 2 - Attendance list'),
+                FormBuilderTextField(
+                  attribute: 'archRep',
+                  decoration: const InputDecoration(
+                      labelText: 'Representing architect'),
+                  maxLines: 1,
+                  /*
+                  validators: [
+                    FormBuilderValidators.required(
+                        errorText: 'This field is required'),
+                    FormBuilderValidators.maxLength(40,
+                        errorText:
+                            'This field can\'t be more than 40 characters'),
+                  ],
+                   */
+                ),
+                FormBuilderTextField(
+                  attribute: 'contractorRep',
+                  decoration:
+                  const InputDecoration(labelText: 'Representing contractor'),
+                  maxLines: 1,
+                  /*
+                  validators: [
+                    FormBuilderValidators.required(
+                        errorText: 'This field is required'),
+                    FormBuilderValidators.maxLength(40,
+                        errorText:
+                            'This field can\'t be more than 40 characters'),
+                  ],
+
+                   */
+                ),
+                FormBuilderTextField(
+                  attribute: 'clientRep',
+                  decoration:
+                  const InputDecoration(labelText: 'Representing client'),
+                  maxLines: 1,
+                  /*
+                  validators: [
+                    FormBuilderValidators.required(
+                        errorText: 'This field is required'),
+                    FormBuilderValidators.maxLength(40,
+                        errorText:
+                            'This field can\'t be more than 40 characters'),
+                  ],
+
+                   */
+                ),
                 SizedBox(height: 50),
                 Header(text: 'Section 3 - Checklist'),
                 SizedBox(height: 15),
@@ -477,6 +525,7 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
           ),
         ],
       ),
+      /*
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.check),
         backgroundColor: Colors.teal,
@@ -493,7 +542,40 @@ class _FormTextState extends State<FormText> with AutomaticKeepAliveClientMixin 
           }
         },
       ),
-      // TODO add FOB for reset
+       */
+      floatingActionButton: SpeedDial(
+        closeManually: true,
+        backgroundColor: Colors.teal,
+
+        child: Icon(Icons.menu),
+        children: [
+          SpeedDialChild(
+            label: 'Submit',
+            backgroundColor: Colors.green,
+            child: Icon(Icons.check),
+            onTap: () async {
+              if (formKey.currentState.saveAndValidate() && formKey2.currentState.saveAndValidate()) {
+                var value = formKey.currentState.value;
+                var valueImage = formKey2.currentState.value;
+                PdfMaker(context, value, valueImage);
+              } else {
+                print('Invalid');
+              }
+            }
+          ),
+          SpeedDialChild(
+            backgroundColor: Colors.redAccent,
+            label: 'Reset all',
+            child: Icon(Icons.refresh),
+
+            onTap: () {
+              formKey.currentState.reset();
+              formKey2.currentState.reset();
+            }
+          ),
+        ],
+      ),
+      
     );
   }
 }
